@@ -3,6 +3,7 @@ package irc
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/thesetkehproject/ana/logger"
 	irclib "github.com/thoj/go-ircevent"
 	"os"
 )
@@ -31,6 +32,7 @@ func connect() error {
 	err := connection.Connect(config.Server)
 
 	if err != nil {
+		logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", config.LogDir), fmt.Sprintf("%v\n", err))
 		return err
 	}
 	return nil
@@ -40,8 +42,8 @@ func init() {
 	file, err := os.Open("config.json")
 
 	if err != nil {
-		fmt.Println("Couldn't read config file, dying...")
-		panic(err) // TODO: Logging
+		logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", config.LogDir), fmt.Sprintf("%v\n", err))
+		panic(err)
 	}
 	defer file.Close()
 
@@ -51,17 +53,18 @@ func init() {
 
 	err = connect()
 	if err != nil {
-		panic(err) // TODO: Logging
+		logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", config.LogDir), fmt.Sprintf("%v\n", err))
+		panic(err)
 	}
 }
 
 func SendNotification(target, message string) {
 	if !connection.Connected() {
 		if err := connect(); err != nil {
-			panic(err) // TODO: Logging
+			logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", config.LogDir), fmt.Sprintf("%v\n", err))
 		}
 	}
 	connection.Notice(target, message)
-	// TODO: Logger needs to be able to log more than just a channel, but notices as well
-	fmt.Printf("Wrote message: '%s' to target '%s'", message, target)
+	logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", config.LogDir),
+		fmt.Sprintf("Target: %s, message: %s\n", target, message))
 }
