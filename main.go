@@ -4,6 +4,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/thesetkehproject/ana/logger"
 	"github.com/thoj/go-ircevent"
 	"os"
 	"strings"
@@ -68,21 +69,21 @@ func AddCallbacks(conn *irc.Connection, config *Config) {
 	conn.AddCallback("JOIN", func(e *irc.Event) {
 		if e.Nick == config.BotNick {
 			conn.Privmsg(config.Channel, "Hello everybody, I'm a bot")
-			LogDir(config.LogDir)
-			LogFile(config.LogDir + e.Arguments[0])
+			logger.LogDirCheck(config.LogDir)
+			logger.LogFile(config.LogDir + e.Arguments[0])
 		}
 		message := fmt.Sprintf("%s has joined", e.Nick)
-		go ChannelLogger(log, e.Nick, message)
+		go logger.IRCChannelLogger(log, e.Nick, message)
 	})
 	conn.AddCallback("PART", func(e *irc.Event) {
 		message := fmt.Sprintf("has parted (%s)", e.Message())
 		nick := fmt.Sprintf("%s@%s", e.Nick, e.Host)
-		go ChannelLogger(log, nick, message)
+		go logger.IRCChannelLogger(log, nick, message)
 	})
 	conn.AddCallback("QUIT", func(e *irc.Event) {
 		message := fmt.Sprintf("has quit (%v)", e.Message)
 		nick := fmt.Sprintf("%s@%s", e.Nick, e.Host)
-		go ChannelLogger(log, nick, message)
+		go logger.IRCChannelLogger(log, nick, message)
 	})
 
 	conn.AddCallback("PRIVMSG", func(e *irc.Event) {
@@ -102,7 +103,7 @@ func AddCallbacks(conn *irc.Connection, config *Config) {
 
 		if len(message) > 0 {
 			if e.Arguments[0] != config.BotNick {
-				go ChannelLogger(log, e.Nick+": ", message)
+				go logger.IRCChannelLogger(log, e.Nick+": ", message)
 			}
 		}
 	})
