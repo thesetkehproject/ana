@@ -26,10 +26,14 @@ type Config struct {
 	Forums     string
 }
 
-func SendNotification(target, message string) {
-	connection.Notice(target, message)
-	// TODO: Logger needs to be able to log more than just a channel, but notices as well
-	fmt.Printf("Wrote message: '%s' to target '%s'", message, target)
+func connect() error {
+	connection := irclib.IRC(config.BotNick, config.BotUser)
+	err := connection.Connect(config.Server)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func init() {
@@ -37,7 +41,7 @@ func init() {
 
 	if err != nil {
 		fmt.Println("Couldn't read config file, dying...")
-		panic(err)
+		panic(err) // TODO: Logging
 	}
 	defer file.Close()
 
@@ -45,15 +49,19 @@ func init() {
 	config = &Config{}
 	decoder.Decode(&config)
 
-	connection := irclib.IRC(config.BotNick, config.BotUser)
-	err = connection.Connect(config.Server)
-
+	err = connect()
 	if err != nil {
-		fmt.Println("Failed to connect.")
-		panic(err)
+		panic(err) // TODO: Logging
 	}
 }
 
-func Client() {
-	connection.Loop()
+func SendNotification(target, message string) {
+	if !connection.Connected() {
+		if err := connect(); err != nil {
+			panic(err) // TODO: Logging
+		}
+	}
+	connection.Notice(target, message)
+	// TODO: Logger needs to be able to log more than just a channel, but notices as well
+	fmt.Printf("Wrote message: '%s' to target '%s'", message, target)
 }
