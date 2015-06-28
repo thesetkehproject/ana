@@ -5,11 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/thoj/go-ircevent"
-	"io/ioutil"
-	"math/rand"
-	"net/http"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -29,28 +25,6 @@ type Config struct {
 	Forums     string
 }
 
-var quips = []string{
-	"FOR SCIENCE!",
-	"because... reasons.",
-	"it's super effective!",
-	"because... why not?",
-	"was it good for you?",
-	"given the alternative, yep, worth it!",
-	"don't ask...",
-	"then makes a sandwich.",
-	"oh noes!",
-	"did I do that?",
-	"why must you turn this place into a house of lies!",
-	"really???",
-	"LLLLEEEEEERRRRRROOOOYYYY JEEEENNNKINNNS!",
-	"DOH!",
-	"Giggity!",
-}
-
-func RandomQuip() string {
-	return quips[rand.Intn(len(quips))]
-}
-
 // ParseCmds takes PRIVMSG strings containing a preceding bang "!"
 // and attempts to turn them into an ACTION that makes sense.
 // Returns a msg string.
@@ -67,84 +41,19 @@ func ParseCmds(cmdMsg string, config *Config) string {
 		msgArray = strings.SplitN(cmdArray[1], " ", 2)
 	}
 
-	if len(msgArray) > 1 {
-		cmd := fmt.Sprintf("%vs", msgArray[0])
-		switch {
-		case strings.Contains(cmd, "cakeday"):
-			msg = CakeDayCmd(msgArray[1])
-		case strings.Contains(cmd, "ddg"), strings.Contains(cmd, "search"):
-			query := strings.Join(msgArray[1:], " ")
-			msg = SearchCmd(query)
-		case strings.Contains(cmd, "convtemp"):
-			query := strings.Join(msgArray[1:], " ")
-			msg = ConvertTempCmd(query)
-		default:
-			msg = GenericVerbCmd(cmd, msgArray[1])
-		}
-	} else {
-		switch {
-		case strings.Contains(msgArray[0], "help"):
-			msg = HelpCmd(config.Trigger)
-		case strings.Contains(msgArray[0], "wiki"):
-			msg = WikiCmd(config)
-		case strings.Contains(msgArray[0], "homepage"):
-			msg = HomePageCmd(config)
-		case strings.Contains(msgArray[0], "forums"):
-			msg = ForumCmd(config)
-		default:
-			msg = ""
-		}
+	switch {
+	case strings.Contains(msgArray[0], "help"):
+		msg = HelpCmd(config.Trigger)
+	case strings.Contains(msgArray[0], "wiki"):
+		msg = WikiCmd(config)
+	case strings.Contains(msgArray[0], "homepage"):
+		msg = HomePageCmd(config)
+	case strings.Contains(msgArray[0], "forums"):
+		msg = ForumCmd(config)
+	default:
+		msg = ""
 	}
 	return msg
-}
-
-// UrlTitle attempts to extract the title of the page that a
-// pasted URL points to.
-// Returns a string message with the title and URL on success, or a string
-// with an error message on failure.
-func UrlTitle(msg string) string {
-	var (
-		newMsg, url, title, word string
-	)
-
-	regex, _ := regexp.Compile(`(?i)<title>(.*?)<\/title>`)
-
-	msgArray := strings.Split(msg, " ")
-
-	for _, word = range msgArray {
-		if strings.Contains(word, "http") || strings.Contains(word, "www") {
-			url = word
-			break
-		}
-	}
-
-	resp, err := http.Get(url)
-
-	if err != nil {
-		return fmt.Sprintf("Could not resolve URL %v, beware...\n", url)
-	}
-
-	defer resp.Body.Close()
-
-	rawBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Sprintf("Could not read response Body of %v ...\n", url)
-	}
-
-	body := string(rawBody)
-	noNewLines := strings.Replace(body, "\n", "", -1)
-	noCarriageReturns := strings.Replace(noNewLines, "\r", "", -1)
-	notSoRawBody := noCarriageReturns
-
-	titleMatch := regex.FindStringSubmatch(notSoRawBody)
-	if len(titleMatch) > 1 {
-		title = strings.TrimSpace(titleMatch[1])
-	} else {
-		title = fmt.Sprintf("Title Resolution Failure")
-	}
-	newMsg = fmt.Sprintf("[ %v ]( %v )\n", title, url)
-
-	return newMsg
 }
 
 // AddCallbacks is a single function that does what it says.
@@ -182,9 +91,6 @@ func AddCallbacks(conn *irc.Connection, config *Config) {
 		if strings.Contains(message, config.Trigger) && strings.Index(message, config.Trigger) == 0 {
 			response = ParseCmds(message, config)
 		}
-		if strings.Contains(message, "http://") || strings.Contains(message, "https://") || strings.Contains(message, "www.") {
-			response = UrlTitle(message)
-		}
 
 		if strings.Contains(message, fmt.Sprintf("%squit", config.Trigger)) {
 			QuitCmd(config.Admins, e.Nick)
@@ -204,7 +110,6 @@ func AddCallbacks(conn *irc.Connection, config *Config) {
 
 func main() {
 
-	rand.Seed(64)
 	file, err := os.Open("config.json")
 
 	if err != nil {
