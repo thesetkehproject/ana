@@ -1,5 +1,5 @@
 // Ana
-package main
+package irc
 
 import (
 	"encoding/json"
