@@ -1,12 +1,12 @@
 {
-    "Admins": ["darthlukan"],
+    "Admins": ["darthlukan", "setkeh"],
     "Server": "irc.freenode.net:6667",
-    "Channel": "#evolveos",
-    "BotUser": "Gobot",
-    "BotNick": "Gobot",
+    "Channel": "#thesetkehproject",
+    "BotUser": "Eliza-BOT-Ana",
+    "BotNick": "Eliza-BOT-Ana",
     "Trigger": "!",
-    "LogDir": "/tmp/gobot/",
-    "WikiLink": "https://evolve-os.com/wiki",
-    "Homepage": "https://evolve-os.com/",
-    "Forums": "https://evolve-os.com/forums"
+    "LogDir": "/tmp/ana/",
+    "WikiLink": "https://github.com/thesetkehproject",
+    "Homepage": "https://github.com/thesetkehproject",
+    "Forums": "https://github.com/thesetkehproject"
 }
