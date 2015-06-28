@@ -5,20 +5,6 @@ import (
 	"testing"
 )
 
-func TestGenericVerbCmd(t *testing.T) {
-	cmdResponse := GenericVerbCmd("slaps", "USER")
-	if !strings.Contains(cmdResponse, "slaps") || !strings.Contains(cmdResponse, "USER") {
-		t.Errorf("GenericVerbCmd(%v, %v), got %v, want 'slaps' and 'USER'", "slaps", "USER\n", cmdResponse)
-	}
-}
-
-func TestCakeDayCmd(t *testing.T) {
-	cakedayMsg := CakeDayCmd("darthlukan")
-	if !strings.Contains(cakedayMsg, "darthlukan") || !strings.Contains(cakedayMsg, "9 June 2010") {
-		t.Errorf("CakeDayCmd(%v), got %v, want 'Reddit cakeday for darthlukan is: 9 June 2010\n", "darthlukan", cakedayMsg)
-	}
-}
-
 func TestHelpCmd(t *testing.T) {
 	helpMsg := HelpCmd("!")
 	if !strings.Contains(helpMsg, "Commands: !help, !ddg/search") {
@@ -50,27 +36,5 @@ func TestForumCmd(t *testing.T) {
 	forumUrl := ForumCmd(config)
 	if !strings.Contains(forumUrl, "FORUMURL") {
 		t.Errorf("ForumCmd(%v), got %v, want 'FORUMURL'\n", config, forumUrl)
-	}
-}
-
-func TestSearchCmd(t *testing.T) {
-	topicalResult := SearchCmd("New York")
-	if !strings.Contains(topicalResult, "First Topical Result:") {
-		t.Errorf("SearchCmd(%v), got %v, want 'First Topical Result:'\n", "New York", topicalResult)
-	}
-	redirectResult := SearchCmd("!archwiki i3")
-	if !strings.Contains(redirectResult, "Redirect result:") {
-		t.Errorf("SearchCmd(%v), got %v, want 'Redirect result:'\n", "!archwiki i3", redirectResult)
-	}
-	noResult := SearchCmd("my face")
-	if !strings.Contains(noResult, "returned no results") {
-		t.Errorf("SearchCmd(%v), got %v, want 'Query: my face returned no results.'\n", "your face", noResult)
-	}
-}
-
-func TestConvertTempCmd(t *testing.T) {
-	result := ConvertTempCmd("-40F")
-	if !strings.Contains(result, "-40C") {
-		t.Errorf("ConvertTemps('-40F'), got %v, want '-40F is -40C'.\n", result)
 	}
 }
