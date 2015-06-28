@@ -1,6 +1,8 @@
 Ana
 ========
 
+[![Build
+Status](https://drone.io/github.com/thesetkehproject/ana/status.png)](https://drone.io/github.com/thesetkehproject/ana/latest)
 
 ## Author
 
