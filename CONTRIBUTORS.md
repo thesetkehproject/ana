@@ -1,3 +1,4 @@
 # Ana Contributors
 
-- Name/Username <email@domain.com>
+- Brian Tomlinson/Darthlukan darthlukan@gmail.com
+- James Griffis/Setkeh setkeh@gmail.com
