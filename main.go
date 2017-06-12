@@ -7,7 +7,13 @@ import (
 )
 
 func main() {
-	Container := Config.DoConfig("config.json")
+	ConfigContainer := Config.DoConfig("config.json")
 
-	fmt.Printf("Bot User: %v", Container.AnaCommon.BotUser)
+	fmt.Println("Bot User: %v", ConfigContainer.AnaCommon.BotUser)
+
+	if ConfigContainer.IrcConfig.Server != "" {
+		fmt.Println(ConfigContainer.IrcConfig)
+	} else {
+		fmt.Println("No IRC Configuration!")
+	}
 }
