@@ -2,11 +2,17 @@ package configuration
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
+	"os"
+	"github.com/thesetkehproject/ana/logger"
+)
+
+var (
+	cont Container
 )
 
 type Container struct {
-	Common struct {
+	AnaCommon struct {
 		BotUser    string       `json:"BotUser"`
 		Admins     []string     `json:"Admins"`
 		Trigger    string       `json:"Trigger"`
@@ -15,39 +21,25 @@ type Container struct {
 		Homepage   string       `json:"Homepage"`
 		Forums     string       `json:"Forums"`
 		WeatherKey string       `json:"WeatherKey"`
-	}  `json:"anaCommon"`
-	ircConfig struct {
+	}  `json:"AnaCommon"`
+	IrcConfig struct {
 		Server     string       `json:"Server"`
 		Channel    string       `json:"Channel"`
 		BotNick    string       `json:"BotNick"`
-	}   `json:"ircConfig"`
+	}   `json:"IrcConfig"`
 }
 
-func doConfig() Container {
-	jStr := `
-    {
-        "anaCommon": {
-            "BotUser": "Eliza-BOT-Ana",
-            "Admins": ["darthlukan", "setkeh"],
-            "Trigger": "!",
-            "LogDir": "/tmp/ana/",
-            "WikiLink": "https://github.com/thesetkehproject",
-            "Homepage": "https://github.com/thesetkehproject",
-            "Forums": "https://github.com/thesetkehproject",
-            "WeatherKey": "AMSL"
-        },
-        "ircConfig": {
-            "Server": "irc.freenode.net:6667",
-            "Channel": "#thesetkehproject",
-            "BotNick": "Eliza-BOT-Ana"
-        }
-    }
-    `
+func DoConfig(filePath string) Container {
+	file, err := os.Open(filePath)
 
-	var cont Container
-	if err := json.Unmarshal([]byte(jStr), &cont); err != nil {
-		log.Fatal(err)
+	if err != nil {
+		logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", cont.AnaCommon.LogDir), fmt.Sprintf("%v\n", err))
+		panic(err)
 	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	decoder.Decode(&cont)
 
 	return cont
 }

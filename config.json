@@ -1,12 +1,17 @@
 {
-    "Admins": ["darthlukan", "setkeh"],
-    "Server": "irc.freenode.net:6667",
-    "Channel": "#thesetkehproject",
-    "BotUser": "Eliza-BOT-Ana",
-    "BotNick": "Eliza-BOT-Ana",
-    "Trigger": "!",
-    "LogDir": "/tmp/ana/",
-    "WikiLink": "https://github.com/thesetkehproject",
-    "Homepage": "https://github.com/thesetkehproject",
-    "Forums": "https://github.com/thesetkehproject"
+    "AnaCommon": {
+        "BotUser": "Eliza-BOT-Ana",
+        "Admins": ["darthlukan", "setkeh"],
+        "Trigger": "!",
+        "LogDir": "/tmp/ana/",
+        "WikiLink": "https://github.com/thesetkehproject",
+        "Homepage": "https://github.com/thesetkehproject",
+        "Forums": "https://github.com/thesetkehproject",
+        "WeatherKey": "AMSL"
+    },
+    "IrcConfig": {
+        "Server": "irc.freenode.net:6667",
+        "Channel": "#thesetkehproject",
+        "BotNick": "Eliza-BOT-Ana"
+    }
 }

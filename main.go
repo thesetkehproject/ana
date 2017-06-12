@@ -2,12 +2,12 @@
 package main
 
 import (
-	"github.com/thesetkehproject/ana/configuration"
+	Config "github.com/thesetkehproject/ana/configuration"
 	"fmt"
 )
 
 func main() {
-	config := configuration.Container{}.Common
+	Container := Config.DoConfig("config.json")
 
-	fmt.Printf(config.Botuser)
+	fmt.Printf("Bot User: %v", Container.AnaCommon.BotUser)
 }
