@@ -13,7 +13,7 @@ func main() {
 
 	if ConfigContainer.IrcConfig.Server != "" {
 		logger.GenericLogger(ConfigContainer.AnaCommon.LogDir, "IRC Configuration Found! Running Connection Command")
-		irc.Connect(ConfigContainer)
+		irc.SendIrcNotice(ConfigContainer, "New Message Test Function From Main Function.")
 	} else {
 		fmt.Println("No IRC Configuration!")
 	}
