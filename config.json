@@ -10,7 +10,7 @@
         "WeatherKey": "AMSL"
     },
     "IrcConfig": {
-        "Server": "irc.freenode.net:6667",
+        "Server": "irc.freenode.net:7000",
         "Channel": "#thesetkehproject",
         "BotNick": "Eliza-BOT-Ana"
     }

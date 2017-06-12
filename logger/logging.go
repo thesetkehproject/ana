@@ -42,6 +42,7 @@ func IRCChannelLogger(logfile string, nick string, message string) {
 	}
 	defer f.Close()
 	n, err := io.WriteString(f, fmt.Sprintf("%v > %v: %v\n", STime, nick, message))
+	fmt.Printf("IRC: %v - %v: %v", STime, nick, message)
 	if err != nil {
 		fmt.Println(n, err)
 	}
@@ -56,6 +57,7 @@ func GenericLogger(destination, message string) error {
 	defer dest.Close()
 
 	_, err = io.WriteString(dest, fmt.Sprintf("%v: %s\n", t, message))
+	fmt.Println("Generic: %v - %v", t, message)
 	if err != nil {
 		return err
 	}
