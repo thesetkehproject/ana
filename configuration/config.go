@@ -2,9 +2,7 @@ package configuration
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
-	"github.com/thesetkehproject/ana/logger"
 )
 
 var (
@@ -17,6 +15,7 @@ type Container struct {
 		Admins     []string     `json:"Admins"`
 		Trigger    string       `json:"Trigger"`
 		LogDir     string       `json:"LogDir"`
+		LogFile	   string		`json:"LogFile"`
 		WikiLink   string       `json:"WikiLink"`
 		Homepage   string       `json:"Homepage"`
 		Forums     string       `json:"Forums"`
@@ -33,7 +32,6 @@ func DoConfig(filePath string) Container {
 	file, err := os.Open(filePath)
 
 	if err != nil {
-		logger.GenericLogger(fmt.Sprintf("%s/ana-irc.log", cont.AnaCommon.LogDir), fmt.Sprintf("%v\n", err))
 		panic(err)
 	}
 	defer file.Close()
